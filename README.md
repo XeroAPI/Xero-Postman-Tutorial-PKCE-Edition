@@ -40,7 +40,7 @@ Copy the following details into the Params tab of the GET Authorisation Call:
 6. State - any value you wish. Including the State with this call is optional however we suggest using it for this tutorial. If you’re not including State, untick the checkbox next to the State (you’ll also have to untick it on any calls you make)
 7. code_challenge - see the step below
 
-![GET Authorisation Call with some Details](images/3_1_addedToGetAuth.PNG)
+![GET Authorisation Call with some Details](images/3_1_addedToGetAuth.PNG.PNG)
 
 ### 4. Generate a Code Challenge
 The main difference between an Authorisation Grant Type and the PKCE Grant, is that the PKCE Grant does not have Client Secret. It instead uses a Code Verifier and Code Challenge. As you can’t currently generate these codes easily in Postman at the moment, you can use the following online tool to generate them for you: https://tonyxu-io.github.io/pkce-generator/
@@ -51,7 +51,7 @@ The main difference between an Authorisation Grant Type and the PKCE Grant, is t
 1. Copy out the Code Challenge and post it into the Params tab of the GET Authorisation Call from the previous step
 1. Keep a hold of the Code Verifier, as you will need this with other calls later
 
-![PKCE Generator Settings](images/4_1_pkceGeneration.PNG)
+![PKCE Generator Settings](images/4_1_pkceGeneration.PNG.PNG)
 
 ### 5. Add your Variables to the Environment
 Just like the Params Tab of GET Authorisation Call, we now need to add the Following Details to your Environment:
