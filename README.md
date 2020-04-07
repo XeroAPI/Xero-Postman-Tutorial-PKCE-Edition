@@ -72,3 +72,16 @@ Just like the Params Tab of GET Authorisation Call, we now need to add the Follo
 ### 6. Authorise your PKCE App with a Xero Organisation
 Now that you have added all the variables to both the Environment and Params Tab, double click and copy the URL that Postman has generated for you out of the URL Call field and paste it into your browser.
 
+![Copy the URL out of Postman and into your Browser](images/6_1_copyOut.png)
+
+You’ll then be directed to the Xero Login Screen. If you hit an Error 500 at this stage, towards the bottom of the error page, an error message will display, showing what is causing the error. Login with a User account with either an active Demo Company, or Xero Organisation (this Organisation can be a Trial).
+
+Good  | Bad
+------------- | -------------
+![Good](images/6_2a_good.png)  | ![Bad](images/6_2b_bad.png)
+
+
+
+![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
+![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
+![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
