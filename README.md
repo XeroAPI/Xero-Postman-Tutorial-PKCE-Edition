@@ -109,5 +109,5 @@ Once this has been done, do the same for the Refresh Token
 1. Set: PKCE
 1. Click refresh_token
 
-![Set your Refresh Token](images/7_5_Set RefreshToken.PNG)
+![Set your Refresh Token](images/7_5_SetRefreshToken.PNG)
 
