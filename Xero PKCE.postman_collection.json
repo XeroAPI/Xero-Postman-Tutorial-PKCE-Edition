@@ -1,0 +1,445 @@
+{
+	"info": {
+		"_postman_id": "8b4b7eb2-487e-423c-9e53-2ada0a7028fa",
+		"name": "Xero PKCE",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Authorization",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://login.xero.com/identity/connect/authorize?response_type=code&code_challenge_method=S256&client_id=&scope=openid profile email accounting.transactions offline_access&redirect_uri=&state=&code_challenge",
+					"protocol": "https",
+					"host": [
+						"login",
+						"xero",
+						"com"
+					],
+					"path": [
+						"identity",
+						"connect",
+						"authorize"
+					],
+					"query": [
+						{
+							"key": "response_type",
+							"value": "code"
+						},
+						{
+							"key": "code_challenge_method",
+							"value": "S256"
+						},
+						{
+							"key": "client_id",
+							"value": ""
+						},
+						{
+							"key": "scope",
+							"value": "openid profile email accounting.transactions offline_access"
+						},
+						{
+							"key": "redirect_uri",
+							"value": ""
+						},
+						{
+							"key": "state",
+							"value": ""
+						},
+						{
+							"key": "code_challenge",
+							"value": null
+						}
+					]
+				},
+				"description": "Build the URL then copy it into your browser"
+			},
+			"response": []
+		},
+		{
+			"name": "POST Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "19cc9fbf-b276-43f2-a7eb-a8a5cc6bfd9e",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+							"postman.setEnvironmentVariable(\"refresh_token\", data.refresh_token);",
+							"",
+							"tests[\"access token: \" + pm.environment.get(\"access_token\")] = true;",
+							"tests[\"refresh token: \" + pm.environment.get(\"refresh_token\")] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "Returned in the authorization step",
+							"type": "text"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "{{re_directURI}}",
+							"type": "text"
+						},
+						{
+							"key": "code_verifier",
+							"value": "{{code_verifier}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://identity.xero.com/connect/token",
+					"protocol": "https",
+					"host": [
+						"identity",
+						"xero",
+						"com"
+					],
+					"path": [
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Connections",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6c8ecf27-a232-4b87-931d-8cced27b1fbc",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"xero-tenant-id\", data[0].tenantId);",
+							"",
+							"tests[\"xero-tenant-id: \" + pm.environment.get(\"xero-tenant-id\")] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"type": "text",
+						"value": "Bearer {{access_token}}"
+					}
+				],
+				"url": {
+					"raw": "https://api.xero.com/connections",
+					"protocol": "https",
+					"host": [
+						"api",
+						"xero",
+						"com"
+					],
+					"path": [
+						"connections"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invoices",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "0594d6b2-f97b-4082-b069-feca4628ad65",
+						"exec": [
+							"    tokenUrl = 'https://identity.xero.com/connect/token'",
+							"    clientId = pm.variables.get('client_id'),",
+							"    clientSecret = pm.variables.get('client_secret'),",
+							"    refreshToken = pm.variables.get('refresh_token'),",
+							"    requestOptions = {",
+							"      method: 'POST',",
+							"      url: tokenUrl,",
+							"      body: {",
+							"        mode: 'formdata',",
+							"        formdata: [",
+							"            {",
+							"                key: 'grant_type',",
+							"                value: 'refresh_token'",
+							"            },",
+							"            {",
+							"                key: 'client_id',",
+							"                value: clientId",
+							"            },",
+							"            {",
+							"                key: 'client_secret',",
+							"                value: clientSecret",
+							"            },",
+							"            {",
+							"                key: 'refresh_token',",
+							"                value: refreshToken",
+							"            }",
+							"        ]",
+							"      }",
+							"    };",
+							"",
+							"console.log({ requestOptions });",
+							"",
+							"pm.sendRequest(requestOptions, (err, response) => {",
+							"  let jsonResponse = response.json(),",
+							"      newAccessToken = jsonResponse.access_token;",
+							"      newRefreshToken = jsonResponse.refresh_token;",
+							"      ",
+							"  console.log({ err, jsonResponse, newAccessToken, newRefreshToken })",
+							"  ",
+							"  pm.environment.set('access_token', newAccessToken);",
+							"  pm.environment.set('refresh_token', newRefreshToken);",
+							"  ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "xero-tenant-id",
+						"value": "{{xero-tenant-id}}",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.xero.com/api.xro/2.0/Invoices/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"xero",
+						"com"
+					],
+					"path": [
+						"api.xro",
+						"2.0",
+						"Invoices",
+						""
+					]
+				},
+				"description": "\t"
+			},
+			"response": []
+		},
+		{
+			"name": "Refresh token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "13fa9e86-79a7-4c61-becb-f6fd284b9383",
+						"exec": [
+							"var data = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"access_token\", data.access_token);",
+							"postman.setEnvironmentVariable(\"refresh_token\", data.refresh_token);",
+							"",
+							"tests[\"Access Token: \" + pm.environment.get(\"access_token\") + \" Refresh Token: \" + pm.environment.get(\"refresh_token\")] = true;"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "grant_type",
+						"value": "refresh_token",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "{{refresh_token}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://identity.xero.com/connect/token?=",
+					"protocol": "https",
+					"host": [
+						"identity",
+						"xero",
+						"com"
+					],
+					"path": [
+						"connect",
+						"token"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Revoke Token",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "accessToken",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFDQUY4RTY2NzcyRDZEQzAyOEQ2NzI2RkQwMjYxNTgxNTcwRUZDMTkiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJISy1PWm5jdGJjQW8xbkp2MENZVmdWY09fQmsifQ.eyJuYmYiOjE1ODMyMDY4MTUsImV4cCI6MTU4MzIwNzExNSwiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS54ZXJvLmNvbSIsImF1ZCI6IjAzN0M0MUZBRTM2RDQ4NzA5RTY4QUFGQTFBNzJGM0ExIiwiaWF0IjoxNTgzMjA2ODE1LCJhdF9oYXNoIjoibzlSb1MzSjRfM0xnZzZheDJfa1ItQSIsInNpZCI6IjE3YmU1YWFjMTMzYTc1ZjcxOGEyZTQyZjVmZDcwMTg3Iiwic3ViIjoiYTNhNGRiYTVhMDc5NWE4MDhlZDdhN2I5NjQzODhmNTMiLCJhdXRoX3RpbWUiOjE1ODMyMDY3NTQsInhlcm9fdXNlcmlkIjoiMTkwNTU5M2ItNmViNy00MTQzLWIwODMtN2FiMjZjZDc2OTBiIiwiZ2xvYmFsX3Nlc3Npb25faWQiOiJkYzYyODBiOGQwZWQ0YjFiOWE4NzE5ZWFjNTIxZDM2NiIsInByZWZlcnJlZF91c2VybmFtZSI6ImFkYW0ubW9vcmVAeGVyby5jb20iLCJlbWFpbCI6ImFkYW0ubW9vcmVAeGVyby5jb20iLCJnaXZlbl9uYW1lIjoiQWRhbSIsImZhbWlseV9uYW1lIjoiTW9vcmUifQ.k4YiXNRdLSBXuu3HmwvugWa9m5pQCulcF1SVBKlDiqVIouA_pDHkosShGoELxgfji9b8Dz6RFjYat3hGognFL2907iUzf8eLa56ZTP17zyXlvRwfXfBtY8DQs-9dIUhyhTA5CzkIOIjgxET-9xAMPk730HYbfSESGKh_sMaXqDBiwdQzuUiL1_nlMrbIgiMignl2qwSFJIy6IUqYFhGwqbPYlRDOY9KbhjrYlJlk0o6KMjTxicF7sfam2fLDQexOAeMJ0Grj1PQ33gaojN_IEQ5F1aQKrLw-RYdbqaRgc9xOwF9o07TeGguvJNDcJ0Pd1Am6xDvsazvnihwH1WO0vQ\n",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "Bearer",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjFDQUY4RTY2NzcyRDZEQzAyOEQ2NzI2RkQwMjYxNTgxNTcwRUZDMTkiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJISy1PWm5jdGJjQW8xbkp2MENZVmdWY09fQmsifQ.eyJuYmYiOjE1ODMyMDU4NTcsImV4cCI6MTU4MzIwNzY1NywiaXNzIjoiaHR0cHM6Ly9pZGVudGl0eS54ZXJvLmNvbSIsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHkueGVyby5jb20vcmVzb3VyY2VzIiwiY2xpZW50X2lkIjoiMDM3QzQxRkFFMzZENDg3MDlFNjhBQUZBMUE3MkYzQTEiLCJzdWIiOiJhM2E0ZGJhNWEwNzk1YTgwOGVkN2E3Yjk2NDM4OGY1MyIsImF1dGhfdGltZSI6MTU4MjI0ODYxMSwieGVyb191c2VyaWQiOiIxOTA1NTkzYi02ZWI3LTQxNDMtYjA4My03YWIyNmNkNzY5MGIiLCJnbG9iYWxfc2Vzc2lvbl9pZCI6IjM5MzQxYWFlNjY1MzQ2OThiMzRjYWM2YWNjZTMyNGVmIiwianRpIjoiODhhNDRlMGQ4OGQyMGU2NDliMTU1YTQ0YzVhOGMxYzUiLCJzY29wZSI6WyJlbWFpbCIsInByb2ZpbGUiLCJvcGVuaWQiLCJwYXlyb2xsLmVtcGxveWVlcyIsImFjY291bnRpbmcudHJhbnNhY3Rpb25zIiwicGF5cm9sbC5zZXR0aW5ncyIsIm9mZmxpbmVfYWNjZXNzIl19.Sm4y_rr-pGkYqrQh9JlCTIR69UGQWQkdyo-lfLoHV0QjaYmfBzB9pS5P9fnWoLJqUSd-3cHM1T9Ap0JOGRUr5ppEXWAonsXu_m1Da9574wyqXHfwE3GFKmtndY5jOCtbxJ-321do-HQAcmL6DlsHkoKC7fVJmlqoKGSLw4nuyVZhzaxXOfwD1bkHKvjoRwHgbpaK7hbvT0Hrk8agx4pBq-uCovtGTMXhWoaVkXI69z8o7TZQCbSC5IN-vs03WBJ4zanAgjOrAvr9SARn9MmQo0gQMnPAml1ecLl1YJMW5d7AjIfraUbSuJfbir2cuKC14wawINmRn0baW6xc9o8AKg",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "token",
+							"value": "{{refresh_token}}",
+							"type": "text"
+						}
+					],
+					"options": {
+						"urlencoded": {}
+					}
+				},
+				"url": {
+					"raw": "https://identity.xero.com/connect/revocation",
+					"protocol": "https",
+					"host": [
+						"identity",
+						"xero",
+						"com"
+					],
+					"path": [
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ac66c3db-87e9-48bd-8c26-221b81916887",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8b2028cf-3980-4965-9946-8a6b36e1b98d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
