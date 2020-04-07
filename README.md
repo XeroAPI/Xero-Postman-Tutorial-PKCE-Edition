@@ -40,7 +40,7 @@ Copy the following details into the Params tab of the GET Authorisation Call:
 6. State - any value you wish. Including the State with this call is optional however we suggest using it for this tutorial. If you’re not including State, untick the checkbox next to the State (you’ll also have to untick it on any calls you make)
 7. code_challenge - see the step below
 
-![GET Authorisation Call with some Details](images/3_1_addedToGetAuth.PNG.PNG)
+![GET Authorisation Call with some Details](images/3_1_addedToGetAuth.PNG)
 
 ### 4. Generate a Code Challenge
 The main difference between an Authorisation Grant Type and the PKCE Grant, is that the PKCE Grant does not have Client Secret. It instead uses a Code Verifier and Code Challenge. As you can’t currently generate these codes easily in Postman at the moment, you can use the following online tool to generate them for you: https://tonyxu-io.github.io/pkce-generator/
@@ -51,7 +51,7 @@ The main difference between an Authorisation Grant Type and the PKCE Grant, is t
 1. Copy out the Code Challenge and post it into the Params tab of the GET Authorisation Call from the previous step
 1. Keep a hold of the Code Verifier, as you will need this with other calls later
 
-![PKCE Generator Settings](images/4_1_pkceGeneration.PNG.PNG)
+![PKCE Generator Settings](images/4_1_pkceGeneration.PNG)
 
 ### 5. Add your Variables to the Environment
 Just like the Params Tab of GET Authorisation Call, we now need to add the Following Details to your Environment:
@@ -80,8 +80,34 @@ Good  | Bad
 ------------- | -------------
 ![Good](images/6_2a_good.PNG)  | ![Bad](images/6_2b_bad.PNG)
 
+Once logged in you’ll be able to select an Organisation and shown what your app will access within this selected Organisation. If you are happy with this, click Allow Access.
 
+![Organisation Select Screen](images/6_3_AuthSelect.PNG)
 
-![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
-![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
-![Add your Variables to the Enviroment](images/5_1_addEnviroVariables.png)
+### 7. Receive and Set your Access and Refresh Tokens 
+
+Once you have clicked Allow Access, you’ll be redirected back to the website you’re using as your Redirect URI. In the URL of this website, you’ll be given a code. Copy this Code out of your Browser, from the first character after “code=”, upto the &. Then paste this into the Code field in the Params Tab of the POST Token Call. Add this code to the Code Field.
+
+![Copy this code](images/7_1_codeInURL.PNG)
+![And Paste it here](images/7_2_pasteCodeHere.PNG)
+
+Once you have added the Code to the POST Token Call, click the Send Button to receive your Access and Refresh Token. You’ll also be given an ID Token if you’ve included the OpenID scopes (openid, profile and email) however we will not be using this Token in this Tutorial. 
+
+![You've Received your Tokens!](images/7_3_tokensReceived.PNG)
+
+Once you’ve received your tokens, Set your Access Token to your Environment:
+1. Highlight the Access Token (not including the Quotation Marks)
+1. Right Click
+1. Set: PKCE (if you have anything other than Set: PKCE, change your environment in the top right corner to the PKCE Environment) 
+1. Click access_token
+
+![Set your Access Token](images/7_4_setAccessToken.PNG)
+
+Once this has been done, do the same for the Refresh Token
+1. Highlight the Refresh Token (not including the Quotation Marks)
+1. Right Click
+1. Set: PKCE
+1. Click refresh_token
+
+![Set your Refresh Token](images/7_5_Set RefreshToken.PNG)
+
