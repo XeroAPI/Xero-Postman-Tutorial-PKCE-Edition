@@ -111,3 +111,20 @@ Once this has been done, do the same for the Refresh Token
 
 ![Set your Refresh Token](images/7_5_SetRefreshToken.PNG)
 
+### 8. Receive and Set your Tenant ID
+
+Select the Connections Call from your Collections on the Left and Send the Call. You’ll then be returned the Connection ID (named ID), Tenant ID, Tenant Type, Created and Updated Dates of your Tenants. If you've connected Multiple Organisations, you'll receive multiple Tenant IDs. 
+
+![These are your Tenants](images/8_1_tenantsReceived.PNG)
+
+Like we did for the Access and Refresh Tokens, we now need to set the Tenant ID. 
+1. Highlight the Tenant ID (not including the Quotation Marks)
+1. Right Click
+1. Set: PKCE
+1. Click refresh_token
+
+![Set the Tenant](images/8_2_setTenant.PNG)
+
+Once this has been done you can start making calls! We'd suggest trying out the Invoice Get Call included with the Collection. If you'd like to try out other endpoints, remember you may need to also add a new Scope to access it. If you do this, add the new Scope at step 3 and start the process again from there. 
+
+Happy API'ing!
