@@ -30,17 +30,17 @@ You'll then be taken to your App's Details page. Keep this page open, and start 
 ### 3. Add your Variables to the GET Authorisation Call
 Copy the following details into the Params tab of the GET Authorisation Call:
 1. Response_type - code
-1. code_challenge_method - S256
-1. Client ID - The Client ID you’ve just generated from the My Apps Page
-1. Scopes - the scopes you’ll use to access the areas of Xero you require. More information on Scopes can be found here (https://developer.xero.com/documentation/oauth2/scopes) For this tutorial, we’d suggest using the following:
+2. code_challenge_method - S256
+3. Client ID - The Client ID you’ve just generated from the My Apps Page
+4. Scopes - the scopes you’ll use to access the areas of Xero you require. More information on Scopes can be found here (https://developer.xero.com/documentation/oauth2/scopes) For this tutorial, we’d suggest using the following:
   1. openid
-  1. profile
-  1. email
-  1. offline_access
-  1. accounting.transactions
-1. OAuth 2.0 Redirect URI - The URI you’ve entered into the My Apps Page, this has to match exactly
-1. State - any value you wish. Including the State with this call is optional however we suggest using it for this tutorial. If you’re not including State, untick the checkbox next to the State (you’ll also have to untick it on any calls you make)
-1. code_challenge - see the step below
+  2. profile
+  3. email
+  4. offline_access
+  5. accounting.transactions
+5. OAuth 2.0 Redirect URI - The URI you’ve entered into the My Apps Page, this has to match exactly
+6. State - any value you wish. Including the State with this call is optional however we suggest using it for this tutorial. If you’re not including State, untick the checkbox next to the State (you’ll also have to untick it on any calls you make)
+7. code_challenge - see the step below
 
 ![Environment with some details](images/3_1_addedToEnvironment.PNG)
 
