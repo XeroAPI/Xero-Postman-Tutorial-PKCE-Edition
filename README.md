@@ -86,7 +86,9 @@ Once logged in you’ll be able to select an Organisation and shown what your ap
 
 ### 7. Receive and Set your Access and Refresh Tokens 
 
-Once you have clicked Allow Access, you’ll be redirected back to the website you’re using as your Redirect URI. In the URL of this website, you’ll be given a code. Copy this Code out of your Browser, from the first character after “code=”, upto the &. Then paste this into the Code field in the Params Tab of the POST Token Call. Add this code to the Code Field.
+Once you have clicked Allow Access, you’ll be redirected back to the website you’re using as your Redirect URI. In the URL of this website, you’ll be given a code. Copy this Code out of your Browser, from the first character after “code=”, upto the &. Then paste this into the Code field in the Body Tab of the POST Token Call. Add this code to the Code Field. If this is the first time you've done this you'll be replacing this text:
+
+`Returned in the authorization step`
 
 ![Copy this code](images/7_1_codeInURL.PNG)
 ![And Paste it here](images/7_2_pasteCodeHere.PNG)
@@ -121,7 +123,7 @@ Like we did for the Access and Refresh Tokens, we now need to set the Tenant ID.
 1. Highlight the Tenant ID (not including the Quotation Marks)
 1. Right Click
 1. Set: PKCE
-1. Click refresh_token
+1. Click xero-tenant-id
 
 ![Set the Tenant](images/8_2_setTenant.PNG)
 
